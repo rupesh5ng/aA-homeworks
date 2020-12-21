@@ -17,11 +17,19 @@ GEM
     rspec-support (3.1.2)
 
 PLATFORMS
+<<<<<<< HEAD
   x86_64-darwin-19
+=======
+  ruby
+>>>>>>> a6519840afd920bdedc29e4d7a090bd39d155342
 
 DEPENDENCIES
   pg
   rspec (~> 3.1.0)
 
 BUNDLED WITH
+<<<<<<< HEAD
    2.2.1
+=======
+   2.1.4
+>>>>>>> a6519840afd920bdedc29e4d7a090bd39d155342
