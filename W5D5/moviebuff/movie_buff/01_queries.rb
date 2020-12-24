@@ -1,3 +1,51 @@
+
+# Table name: actors
+#
+#  id   :bigint           not null, primary key
+#  name :string           not null
+#
+
+# Table name: castings
+#
+#  id       :bigint           not null, primary key
+#  ord      :integer          not null
+#  actor_id :integer          not null
+#  movie_id :integer          not null
+#
+
+
+# Table name: movies
+#
+#  id          :bigint           not null, primary key
+#  score       :float            not null
+#  title       :string           not null
+#  votes       :integer          not null
+#  yr          :integer          not null
+#  director_id :integer          not null
+
+def directed_by_one_of(them)
+  # Consider the following:
+  #
+  # Movie.where('yr IN (?)', years)
+  #
+  # We can use IN to test if an element is present in an array.
+  #
+  # ActiveRecord gives us an even better way to write this:
+  #
+  # Movie.where(yr: years)
+  #
+  # Find the id and title of all the movies directed by one of 'them'.
+  Movie
+    .select(:id, :title)
+    .joins(:director)
+    .where(actors: {name: them})
+    # .where('name IN (?)', them)
+
+    # director_id1 = Actor.select(:id).where(name: them)
+    # Movie.select(:id,:title).where(director_id: director_id1 )
+end
+
+
 def it_was_ok
   # Consider the following:
   #
@@ -6,7 +54,7 @@ def it_was_ok
   # We can use ranges (a..b) inside a where method.
   #
   # Find the id, title, and score of all movies with scores between 2 and 3
-
+  Movie.select(:id, :title, :score).where(score: 2..3)
 end
 
 def harrison_ford
@@ -20,7 +68,11 @@ def harrison_ford
   #
   # Find the id and title of all movies in which Harrison Ford
   # appeared but not as a lead actor
-
+  Movie
+    .select(:id, :title)
+    .joins(:actors)
+    .where(actors: {name: 'Harrison Ford'})
+    .where.not(castings: {ord: 1})
 end
 
 def biggest_cast
@@ -37,23 +89,16 @@ def biggest_cast
   #
   # Find the id and title of the 3 movies with the
   # largest casts (i.e most actors)
+  Movie
+    .select(:id, :title)
+    .joins(:actors)
+    .limit(3)
+    .group('movies.id')
+    .order('COUNT(actors.id) DESC')
 
 end
 
-def directed_by_one_of(them)
-  # Consider the following:
-  #
-  # Movie.where('yr IN (?)', years)
-  #
-  # We can use IN to test if an element is present in an array.
-  #
-  # ActiveRecord gives us an even better way to write this:
-  #
-  # Movie.where(yr: years)
-  #
-  # Find the id and title of all the movies directed by one of 'them'.
 
-end
 
 def movie_names_before_1940
   # Consider the following:
@@ -66,5 +111,5 @@ def movie_names_before_1940
   # improve performace for larger queries.
   #
   # Use pluck to find the title of all movies made before 1940.
-
+  Movie.where('yr < 1940').pluck(:title)
 end

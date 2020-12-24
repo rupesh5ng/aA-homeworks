@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: actors
+#
+#  id   :bigint           not null, primary key
+#  name :string           not null
+#
+# Indexes
+#
+#  index_actors_on_name  (name)
+#
 class Actor < ApplicationRecord
   has_many :castings,
     class_name: :Casting,

@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: movies
+#
+#  id          :bigint           not null, primary key
+#  score       :float            not null
+#  title       :string           not null
+#  votes       :integer          not null
+#  yr          :integer          not null
+#  director_id :integer          not null
+#
+# Indexes
+#
+#  index_movies_on_director_id  (director_id)
+#  index_movies_on_title        (title)
+#
 class Movie < ApplicationRecord
   belongs_to :director,
     class_name: :Actor,
