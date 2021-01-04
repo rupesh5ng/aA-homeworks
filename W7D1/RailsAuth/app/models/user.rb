@@ -8,7 +8,12 @@ class User < ApplicationRecord
     
     def self.find_by_credentials(username,password)
         user = User.find_by(username: username)
-        return user if user && BCrypt::Password.new(user.password_digest).is_password?(password)
+        pass = BCrypt::Password.create(password).to_s
+        bcrypt_pass = BCrypt::Password.new(pass)
+        
+        return user if user && bcrypt_pass.is_password?(user.password)
+
+        # return user if user && BCrypt::Password.new(user.password_digest).is_password?(password)
         nil
     end
 
