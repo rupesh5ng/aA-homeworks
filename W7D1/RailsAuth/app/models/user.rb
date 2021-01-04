@@ -9,13 +9,16 @@ class User < ApplicationRecord
     
     def self.find_by_credentials(username,password)
         user = User.find_by(username: username)
-        pass = BCrypt::Password.create(password_digest).to_s
-        bcrypt_pass = BCrypt::Password.new(pass)
-        
-        return user if user && bcrypt_pass.is_password?(user.password)
 
-        # return user if user && BCrypt::Password.new(user.password_digest).is_password?(password)
-        nil
+
+        if user && user.is_password?(password)
+            user
+        else
+            nil
+        end
+    end
+    def is_password?(password)
+        BCrypt::Password.new(self.password_digest).is_password?(password)
     end
 
     def self.generate_session_token
@@ -41,7 +44,4 @@ class User < ApplicationRecord
        @Password = password
     end
 
-    # def is_password?(password)
-    #     BCrypt::Password.new(self.password_digest).is_password?(password)
-    # end
 end
