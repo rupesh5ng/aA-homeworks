@@ -18,20 +18,24 @@ class User < ApplicationRecord
     end
 
     def self.generate_session_token
-        SecureRandom::urlsafe_base64 
+        SecureRandom::urlsafe_base64(16)
     end
 
     def reset_session_token!
+        # user = User.where(
+        #     username: username,
+        #     password: password
+        # ).first
         self.session_token = User.generate_session_token
-        self.save!
-        self.session_token
+        self.save! # user.save!
+        self.session_token # session[:session_token] = user.session_token
     end
 
     def ensure_session_token
         self.session_token ||= User.generate_session_token
     end
     def Password=(password)
-        @Password =password
+        @Password = password
         self.password_digest = BCrypt::Password.create(password)
     end
 end
