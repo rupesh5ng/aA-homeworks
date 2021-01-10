@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
-
-    helper_method :logged_in? , :require_logged_in, :current_user
+    protect_from_forgery with: :exception
+    helper_method :logged_in? , :current_user
     #CRLLL
     def current_user
         @current_user ||= User.find_by(session_token: session[:session_token])
